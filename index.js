@@ -16,4 +16,4 @@ app.listen(app.get('port'), function() {
     console.log('Node app is running on port', app.get('port'));
 });
 
-//TODO:for any changes, git push heroku master;
+//TODO:for any changes, push changes to master then, git push heroku master;

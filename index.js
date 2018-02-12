@@ -8,10 +8,6 @@ var app = express();
 
 app.set('port', (process.env.PORT || 4444));
 
-app.get('/', function(req, res) {
-    res.render('pages/index');
-});
-
 app.listen(app.get('port'), function() {
     console.log('Node app is running on port', app.get('port'));
 });

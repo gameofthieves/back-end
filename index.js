@@ -13,3 +13,4 @@ app.listen(app.get('port'), function() {
 });
 
 //TODO:for any changes, push changes to master then, git push heroku master;
+//TODO: to run the app through heroku use, heroku open

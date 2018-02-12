@@ -1,0 +1,67 @@
+{
+  "name": "game-of-thieves-back-end",
+  "version": "1.0.0",
+  "description": "Game of Thieves back end; mafia game spin-off.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "start:watch": "nodemon index.js",
+    "start:debug": "DEBUG=http* nodemon index.js",
+    "test": "jest -i",
+    "test:watch": "jest -i --watchAll",
+    "test:debug": "DEBUG=http* jest -i",
+    "lint": "eslint .",
+    "lint:test": "npm run lint && npm test",
+    "start-db": "mkdir -p ./data/db && mongod --dbpath ./data/db",
+    "stop-db": "killall mongod"
+  },
+  "jest": {
+    "setupFiles": [
+      "./test/lib/jest-setup.js"
+    ],
+    "verbose": true,
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coverageDirectory": "./coverage",
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gameofthieves/back-end.git"
+  },
+  "author": "Joy, Joel, Mitchell, Ed",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gameofthieves/back-end/issues"
+  },
+  "homepage": "https://github.com/gameofthieves/back-end#readme",
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "debug": "^3.1.0",
+    "dotenv": "^5.0.0",
+    "express": "^4.16.2",
+    "jsonwebtoken": "^8.1.1",
+    "mongodb": "^3.0.2",
+    "mongoose": "^5.0.4",
+    "faker": "^4.1.0"
+        
+  },
+  "devDependencies": {
+    "eslint": "^4.17.0",
+    "jest": "^22.1.4",
+    "jest-cli": "^22.2.1",
+    "superagent": "^3.8.2"
+  }
+}

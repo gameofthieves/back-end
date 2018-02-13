@@ -9,5 +9,7 @@ module.exports = function (socket) {
   this.currentServer = 'home';
   this.affiliation = 'town';
   this.vote = 0;
-  this.role = null;
+  this.role = 'Not assigned';
+  this.actions = 'None';
+  this.lastwords = 'None';
 };

@@ -29,7 +29,7 @@ roles.jailor.action = (targeted, user) => {
 roles.cop = {};
 roles.cop.action = (targeted, user) => {
   let targetedUser = server.all[user.currentserver].activePlayers.filter(player => player.nick === targeted)[0];
-  targetedUser.affiliation === 'theif' ?  'theif' : 'town';
+  targetedUser.affiliation === 'theif' ? 'theif' : 'town';
 };
 
 roles.creeper = {};

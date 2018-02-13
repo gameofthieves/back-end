@@ -5,7 +5,9 @@ const faker = require('faker');
 
 const User = mongoose.Schema({
   nickname: faker.name.findName()
-  role: {}
+  role: {},
+  vote: {type: Number},
+  lastWords: {type: String},
 });
 
 module.exports = mongoose.model('user', User);

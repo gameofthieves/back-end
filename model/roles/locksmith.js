@@ -7,3 +7,5 @@ const Locksmith = mongoose.Schema({
 });
 
 Locksmith.methods
+
+module.exports = 

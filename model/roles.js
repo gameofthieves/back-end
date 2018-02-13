@@ -10,8 +10,7 @@ const Role = mongoose.Schema({
   creeper: {type: Boolean},
   dentist: {type: Boolean},
   theif: {type: Boolean},
-  recruiter: {type: Boolean},
-
+  recruiter: {type: Boolean}, 
 });
 
 module.exports = mongoose.model('role', Role);

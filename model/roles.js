@@ -2,45 +2,72 @@
 const server = require('../lib/server');
 const roles = module.exports = {};
 
-roles.locksmith = {};
-roles.locksmith.action = (targeted, user) => {
-  let targetedUser = server.all[user.currentserver].activePlayers.filter(player => player.nick === targeted)[0];
-  targetedUser.protected = true;
+roles.thiefrecruiter = {
+  name: 'THIEF RECRUITER',
+  order: 1,
+  alignment: 'thief',
+  action: function (targeted, user) {
+    user.targeting = targeted;
+    targeted.targeted.push('recruited');
+  },
 };
 
-roles.theif = {};
-roles.theif.action = (targeted, user) => {
-  let targetedUser = server.all[user.currentserver].activePlayers.filter(player => player.nick === targeted)[0];
-  targetedUser.protected === true ? targetedUser.rob = false : targetedUser.rob = true;
+roles.jailor = {
+  name: 'JAILOR',
+  order: 2,
+  alignment: 'town',
+  action: function (targeted, user) {
+    user.targeting = targeted;
+    targeted.targeted.push('jailed');
+  },
 };
 
-roles.dentist = {};
-roles.dentist.action = (targeted, user) => {
-  let targetedUser = server.all[user.currentserver].activePlayers.filter(player => player.nick === targeted)[0];
-  targetedUser.mute === true;
+roles.locksmith = {
+  name: 'LOCKSMITH',
+  order: 3,
+  alignment: 'town',
+  action: function (targeted, user) {
+    user.targeting = targeted;
+    targeted.targeted.push('protected');
+  },
 };
 
-roles.jailor = {};
-roles.jailor.action = (targeted, user) => {
-  let targetedUser = server.all[user.currentserver].activePlayers.filter(player => player.nick === targeted)[0];
-  targetedUser.jail === true;
+roles.cop = {
+  name: 'COP',
+  order: 4,
+  alignment: 'town',
+  action: function (targeted, user) {
+    user.targeting = targeted;
+    targeted.targeted.push('investigated');
+  },
 };
 
-roles.cop = {};
-roles.cop.action = (targeted, user) => {
-  let targetedUser = server.all[user.currentserver].activePlayers.filter(player => player.nick === targeted)[0];
-  targetedUser.affiliation === 'theif' ?  'theif' : 'town';
+roles.dentist = {
+  name: 'DENTIST',
+  order: 5,
+  alignment: 'town',
+  action: function (targeted, user) {
+    user.targeting = targeted;
+    targeted.targeted.push('muted');
+  },
 };
 
-roles.creeper = {};
-roles.creeper.action = (targeted, user) => {
-  let targetedUser = server.all[user.currentserver].activePlayers.filter(player => player.nick === targeted)[0];
-  targetedUser.creepin = true;
+roles.thief = {
+  name: 'THIEF',
+  order: 6,
+  alignment: 'thief',
+  action: function (targeted, user) {
+    user.targeting = targeted;
+    targeted.targeted.push('robbed');
+  },
 };
 
-roles.theifrecruiter = {};
-roles.theifrecruiter.action = (targeted, user) => {
-  let targetedUser = server.all[user.currentserver].activePlayers.filter(player => player.nick === targeted)[0];
-  targetedUser.affiliation = 'theif';
-  targetedUser.role = 'THIEF';
+roles.creeper = {
+  name: 'CREEPER',
+  order: 7,
+  alignment: 'town',
+  action: function (targeted, user) {
+    user.targeting = targeted;
+    targeted.targeted.push('creeped');
+  },
 };

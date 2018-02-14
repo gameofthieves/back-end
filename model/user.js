@@ -8,8 +8,12 @@ module.exports = function (socket) {
   this.nick = faker.name.prefix() + faker.name.firstName();
   this.currentServer = 'home';
   this.affiliation = null;
-  this.votingFor = null;
+  this.votedFor = null;
   this.role = 'Not assigned';
+  this.targeting = null;
+  this.targeted = ['none'];
+  this.converted = false;
+  this.mute = false;
   //   this.actions = 'None';
   this.lastwords = 'None';
 };

@@ -15,7 +15,6 @@ module.exports = function (socket) {
   this.converted = false;
   this.mute = false;
   this.actionUsed = false;
-  //   this.actions = 'None';
   this.lastwords = 'None';
   this.nightmsg = '';
 };

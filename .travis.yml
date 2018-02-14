@@ -10,7 +10,7 @@ addons:
     packages:
       - gcc-5
       - g++-5
-env
+env:
   - CXX=g++-5
 sudo: required
 # safelist
@@ -19,6 +19,7 @@ branches:
   - master
   - staging
   - development
+  - dev/mitchell-wed
 
   # except:
   # - 

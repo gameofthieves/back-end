@@ -10,6 +10,10 @@ module.exports = function (socket) {
   this.affiliation = null;
   this.votedFor = null;
   this.role = 'Not assigned';
+  this.targeting = null;
+  this.targeted = ['none'];
+  this.converted = false;
+  this.mute = false;
   //   this.actions = 'None';
   this.lastwords = 'None';
 };

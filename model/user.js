@@ -14,6 +14,8 @@ module.exports = function (socket) {
   this.targeted = ['none'];
   this.converted = false;
   this.mute = false;
+  this.actionUsed = false;
   //   this.actions = 'None';
   this.lastwords = 'None';
+  this.nightmsg = '';
 };

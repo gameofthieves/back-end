@@ -1,5 +1,4 @@
 'use strict';
-const server = require('../lib/server');
 const roles = module.exports = {};
 
 roles.thiefrecruiter = {

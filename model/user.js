@@ -7,13 +7,15 @@ module.exports = function (socket) {
   this.user = uuid('uuid/v4');
   this.nick = faker.name.prefix() + faker.name.firstName();
   this.currentServer = 'home';
-  this.affiliation = null;
+  this.alignment = null;
   this.votedFor = null;
   this.role = 'Not assigned';
   this.targeting = null;
   this.targeted = ['none'];
   this.converted = false;
   this.mute = false;
+  this.actionUsed = false;
   //   this.actions = 'None';
   this.lastwords = 'None';
+  this.nightmsg = '';
 };

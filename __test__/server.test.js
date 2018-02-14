@@ -1,21 +1,28 @@
 'use strict';
 
-const net = require('net');
+// const net = require('net');
 // const User = require('../model/user');
 // const command = require('../lib/commands');
-const server = module.exports = net.createServer();
+// const server = module.exports = net.createServer();
+const server = require('../lib/server');
 const PORT = process.env.PORT;
+require('jest');
 
-describe('#server', () => {
-  beforeAll(server.start);
-  afterAll(server.stop);
+describe('#server', function() {
+  beforeEach(() => {
+    console.log(`starting server on ${PORT}`);
+    return server.start();
+  });
+  afterEach(server.stop);
 
   it('should be listening on port 4000', () => {
     // server.listen(PORT, () => console.log(`Listening on ${PORT}`));
-    expect(PORT).toBe(4000);
+    console.log(PORT);
+    expect(PORT).toBe('4000');
   });
 
-  it('should be on', () => {
-    expect(server.isOn).toBe(true);
-  });
+//   it('should be on', () => {
+//     // console.log('server', server.isOn);
+//     expect(server.isOn).toBe(true);
+//   });
 });

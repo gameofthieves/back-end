@@ -20,9 +20,4 @@ describe('#server', function() {
     console.log(PORT);
     expect(PORT).toBe('4000');
   });
-
-//   it('should be on', () => {
-//     // console.log('server', server.isOn);
-//     expect(server.isOn).toBe(true);
-//   });
 });

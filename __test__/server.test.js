@@ -23,7 +23,7 @@ describe('testing on connection', () => {
     socket.on('data', data => {
       messages.push(data.toString());
       socket.end(null, () => {
-        expect(messages[0]).toMatch('Welcome to Game of Thieves!');
+        expect(messages[0]).toMatch(/Welcome to Game of Thieves/i);
         done();
       });
     });

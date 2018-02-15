@@ -3,7 +3,7 @@
 const net = require('net');
 const server = require('../lib/server');
 const PORT = process.env.PORT;
-
+beforeAll(server.start);
 afterAll(server.stop);
 describe('valid requests', () => {
   it(`should listen on 3000`, () => {
@@ -27,5 +27,29 @@ describe('valid requests', () => {
     });
   });
 
+  describe('should successfully start the server', () => {
+    server.stop;
+    server.isOn;
+    console.log('server.isOn === ', server.isOn);
+    server.start;
 
+    it('should start the server if server.isOn is flagged false', () => {
+      expect(server.isOn).toBe(true);
+    });
+  });
+
+  describe('server connections ', () => {
+    it('should return a count of 1', () => {
+      const client = net.connect({ port: 3000 });
+      server.getConnections((err, count) => {
+        if (err) throw err;
+        console.log('connections: ', count);
+        expect(count).toBe(1);
+      });
+      client.on('data', data => {
+        console.log('data returned on connections test', data);
+        client.end();
+      });
+    });
+  });
 });

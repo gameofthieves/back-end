@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node index.js",
+    "digitalocean": "nohup nodejs index.js --color=true &",
     "start:watch": "nodemon index.js",
     "start:debug": "DEBUG=http* nodemon index.js",
     "test": "jest -i",
@@ -52,7 +53,6 @@
     "chalk": "^2.3.1",
     "cors": "^2.8.4",
     "cowsay": "^1.2.1",
-    "debug": "^3.1.0",
     "dotenv": "^5.0.0",
     "express": "^4.16.2",
     "faker": "^4.1.0",

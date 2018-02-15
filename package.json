@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node index.js",
+    "digitalocean": "nohup nodejs index.js --color=true &",
     "start:watch": "nodemon index.js",
     "start:debug": "DEBUG=http* nodemon index.js",
     "test": "jest -i",

@@ -65,6 +65,11 @@ If you are using `Postman`, it's a little more complicated. After installing `Po
 ## Description
 
 ### Roles
+`roles.js` in the `model/` directory is home to the possible random role assignments to every user in a game session. Each nested object has `name`, `alignment`, and `action` properties.
+* `name` refers to the role name, such as cop, jailor, or thief.
+* `order` is a visual and functional reminder .
+* 
+* 
 
 ### Commands
 

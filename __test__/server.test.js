@@ -52,4 +52,29 @@ describe('valid requests', () => {
       });
     });
   });
+  describe('testing socket write', () => {
+    it('should return a socket name', done => {
+      let socket = net.connect(3000, 'localhost');
+      socket.name = 'Hulk';
+      socket.write('Welcome to game of thieves\n');
+      socket.write(`Your name is ${socket.name}\n`);
+      expect(socket.name).toMatch('Hulk');
+
+      done();
+    });
+  });
+
+  describe('testing on connection', () => {
+    it('should return a dragon', done => {
+      let messages = [];
+      let socket = net.connect({port: 3000});
+      socket.on('data', data => {
+        messages.push(data.toString());
+        socket.end(null, () => {
+          expect(messages[0]).toMatch('Welcome to Game of Thieves!');
+          done();
+        });
+      });
+    });
+  });
 });

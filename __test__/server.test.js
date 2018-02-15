@@ -1,23 +1,39 @@
 'use strict';
 
-// const net = require('net');
-// const User = require('../model/user');
-// const command = require('../lib/commands');
-// const server = module.exports = net.createServer();
+const net = require('net');
 const server = require('../lib/server');
 const PORT = process.env.PORT;
 require('jest');
 
-describe('#server', function() {
-  beforeEach(() => {
-    console.log(`starting server on ${PORT}`);
-    return server.start();
+describe('testing socket write', () => {
+  it('should return a socket name', done => {
+    let socket = net.connect(3000, 'localhost');
+    socket.name = 'Hulk';
+    socket.write('Welcome to game of thieves\n');
+    socket.write(`Your name is ${socket.name}\n`);
+    expect(socket.name).toMatch('Hulk');
+    
+    done();
   });
-  afterEach(server.stop);
+});
 
-  it('should be listening on port 4000', () => {
-    // server.listen(PORT, () => console.log(`Listening on ${PORT}`));
-    console.log(PORT);
-    expect(PORT).toBe('4000');
+describe('testing on connection', () => {
+  it('should return a dragon', done => {
+    let messages = [];
+    let socket = net.connect({port: 3000});
+    socket.on('data', data => {
+      messages.push(data.toString());
+      socket.end(null, () => {
+        expect(messages[0]).toMatch('Welcome to Game of Thieves!');
+        done();
+      });
+    });
+  });
+});
+
+describe('valid requests', () => {
+  it('should listen on port 4000', () => {
+    server.listen(PORT, () => console.log(`Listening on ${PORT}`));
+    expect(PORT).toEqual('4000');
   });
 });

@@ -1,4 +1,4 @@
-# Game of Thieves
+# Game of Thieves                                                                                
 * [Overview](#overview)
 * [Getting Started](#getting-started)
 * [Game Flow](#game-flow)
@@ -38,7 +38,7 @@ After those packages have installed, you can run `npm test` to explore the inclu
 
 **NOTE**: If you'd rather just visit the deployed site instead of downloading and hosting off your local machine, visit [Game of Thieves](gameofthieves.com) at gameofthieves.com. 
 
-**IF** you are cloning and running the application on your local machine, entering `npm start` in your terminal while in the root directory of the application will return a message like this:
+If you are cloning and running the application on your local machine, entering `npm start` in your terminal while in the root directory of the application will return a message like this:
 
 ```
 npm start
@@ -229,40 +229,38 @@ There are currently 7 roles and 1 sub-role in the game, and more can be added as
 ## General
 **`@about`** Describes the basic game mechanics to users to help those unfamiliar udnerstand the flow of the game.
 ```
-      _    _                 _      ____     _____   
-     / \  | |__   ___  _   _| |_   / ___| __|_   _|  
-    / _ \ | '_ \ / _ \| | | | __| | |  _ / _ \| |    
-   / ___ \| |_) | (_) | |_| | |_  | |_| | (_) | |    
-  /_/   \_\_.__/ \___/ \__,_|\__|  \____|\___/|_|    
+     _    _                 _      ____     _____   
+    / \  | |__   ___  _   _| |_   / ___| __|_   _|  
+   / _ \ | '_ \ / _ \| | | | __| | |  _ / _ \| |    
+  / ___ \| |_) | (_) | |_| | |_  | |_| | (_) | |    
+ /_/   \_\_.__/ \___/ \__,_|\__|  \____|\___/|_|    
                                                      
- Game of Thieves is a mafia-based CLI multi-player game.
- Users can create and join game rooms. 
- The game starts when there are 7 players in a room. Users
- are randomly assigned roles that determine their night
- actions and their alignment (town or thief). Each player
- does not know others' roles.
- The game starts with the night phase, where each player
- can use their night actions. Only thieves can talk during
- the night phase and townspeople cannot see the chat. The
- thieves choose one player to rob during the night, and the
- robbed player is forced to leave the game (leave town) the
- next day, unless a blocking action occurs. The night phase
- is one minute long.
- During the day phase, all players choose to vote one player
- out of the game (jail them for suspected robbery). The game
- ends when no thieves are left or when no town are left.
-     Type @help to see the available list of commands.
+The game starts when there are 7 players in a room. Users
+are randomly assigned roles that determine their night
+actions and their alignment (town or thief). Each player
+does not know others' roles.
+The game starts with the night phase, where each player
+can use their night actions. Only thieves can talk during
+the night phase and townspeople cannot see the chat. The
+thieves choose one player to rob during the night, and the
+robbed player is forced to leave the game (leave town) the
+next day, unless a blocking action occurs. The night phase
+is one minute long.
+During the day phase, all players choose to vote one player
+out of the game (jail them for suspected robbery). The game
+ends when no thieves are left or when no town are left.
+    Type @help to see the available list of commands.
 ```
 
 **`@create <room>`** Creates a game room with a custom name 
 ```
-	 you have created the room <room>.
+	you have created the room <room>.
 ```
 
 **`@join <room>`** Joins a custom game room.
 ```
-	 <Your Username> has joined the room <room>. 
-	 Players: <number>; <number> more players needed.
+	<Your Username> has joined the room <room>. 
+	Players: <number>; <number> more players needed.
 ```
 
 **`@help`** Lists all available commands with descriptions.
@@ -295,10 +293,10 @@ There are currently 7 roles and 1 sub-role in the game, and more can be added as
 
 **`@me`** Lists your username, name of current room, and your current role.
 ```
-	 ===== USER ===== 
-	 Name: <your username> 
-	 Room: <room> 
-	 Role: <YOUR ROLE>
+	===== USER ===== 
+	Name: <your username> 
+	Room: <room> 
+	Role: <YOUR ROLE>
 ```
 
 **`@phase`** Lists current day and phase in game (e.g. Day 3, Night Phase).
@@ -308,7 +306,7 @@ There are currently 7 roles and 1 sub-role in the game, and more can be added as
 
 **`@players`** Lists all active players in the room.
 ```
-	 Active users playing in room <room> (7): 
+	Active users playing in room <room> (7): 
 	<User 1>, <User 2>, <User 3>, <User 4>, <User 5>, <User 6>, <User 7>
 ```
 

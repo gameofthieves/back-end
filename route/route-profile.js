@@ -23,7 +23,7 @@ module.exports = function (router) {
     let result = [];
     return Profile.find()
       .then(profiles => {
-        profiles.forEach(profile => result.push([profile.percentWon, profile]));
+        profiles.forEach(profile => result.push({ 'percent': profile.percentWon, 'profile': profile}));
         return res.status(200).send(result);
       })
       .catch(err => errorHandler(err, res));

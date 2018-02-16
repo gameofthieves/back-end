@@ -23,7 +23,9 @@
 
 ***
 # Overview
-This application is a variant and CLI (command line interface) implementation of a popular social game known as Mafia. It incorporates `MongoDB` to save user profiles and statistics from games a registered user has played. There are multiple roles that will be randomly assigned to each user in game. Roles have two possible affiliations; the `town` or `thieves`. As members of the `town`, the goal is to identify and oust the `thieves` from the game through daily voting sessions.
+This application is a variant and CLI (command line interface) implementation of a popular social game known as Mafia. It incorporates `MongoDB` to save user profiles and statistics from games a registered user has played. There are both an `express` HTTP and `net` TCP server running concurrently on two separate ports in this application. The TCP server handles user input from the command line, and the HTTP server handles CRUD methods from user commands parsed from the TCP server.
+
+Once a game room is created and filled by players, a game session will automatically start. There are multiple roles that will be randomly assigned to each user in game. Roles have two possible affiliations; the `town` or `thieves`. As members of the `town`, the goal is to identify and oust the `thieves` from the game through daily voting sessions.
 
 The game has two phases, day and night. During the day phase all users may communicate through a TCP server, providing any information they find helpful (or harmful) to the identification of the `thieves`. Before the night phase begins, every user can cast a vote on who they believe are affiliated with the `thieves`. The user with the largest amount of votes will be cast out of town. During the night phase, the `thieves` are able to speak with one another and vote on who they want to rob, driving them out of town. Each role has their own unique action they are able to take during the night phase. 
 
@@ -262,6 +264,7 @@ ends when no thieves are left or when no town are left.
  @me - lists own name, current room, and role
  @players - lists active players in room
  @phase - lists current day and phase in game
+ @leaderboard - lists top 20 players
  @quit - quits the game
  =============== Day Phase Only Commands ================
  @vote <playername> - votes to jail a player
@@ -271,6 +274,18 @@ ends when no thieves are left or when no town are left.
      for role
  @lastwords - save player's last words to output to room 
      in case the user is evicted or jailed
+```
+
+**`@leaderboard`** Makes a `GET` request to `MongoDB` in real time to show 20 highest scoring user win percentages, and number of games played.
+```
+ _                   _           _                         _ 
+| |    ___  __ _  __| | ___ _ __| |__   ___   __ _ _ __ __| |
+| |   / _ \/ _' |/ _' |/ _ \ '__| '_ \ / _ \ / _' | '__/ _' |
+| |__|  __/ (_| | (_| |  __/ |  | |_) | (_) | (_| | | | (_| |
+|_____\___|\__,_|\__,_|\___|_|  |_.__/ \___/ \__,_|_|  \__,_|
+                                                           
+    <user 1>: <number>% won | <number> games played
+    <user 2>: <number>% won | <number> games played (etc.)
 ```
 
 **`@me`** Lists your username, name of current room, and your current role.

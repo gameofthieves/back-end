@@ -1,60 +1,55 @@
 'use strict';
 
 const faker = require('faker');
+const superagent = require('superagent');
 const Auth = require('../../model/auth');
-// const Gallery = require('../../model/gallery');
-// const Profile = require('../../model/profile');
-const debug = require('debug')('http:mock');
+const Profile = require('../../model/profile');
+const path = `:${process.env.HTTP_PORT}/api/v1/`;
+const mocks = module.exports = {};
 
-const mock = module.exports = {};
+// Auth Mocks
+mocks.auth = {};
 
-/* NESTED MOCK OBJECTS */
-mock.auth = {};
-// mock.gallery = {};
-mock.profile = {};
-
-/* AUTH MOCKS */
-mock.auth.createOne = () => {
+mocks.auth.createOne = () => {
   let result = {};
-  result.password = faker.name.lastName();
+  result.password = faker.internet.password();
 
-  debug('about to create a new mock.auth');
-  return new Auth({
-    username: faker.name.firstName(),
-    email: faker.internet.email(),
-  })
-    .generatePasswordHash(result.password)
-    .then(auth => result.auth = auth)
-    .then(auth => auth.generateToken())
+  let mockUser = new Auth({
+    username: faker.internet.userName(),
+  });
+
+  return mockUser.generatePasswordHash(result.password)
+    .then(user => result.user = user)
+    .then(user => user.generateToken())
     .then(token => result.token = token)
     .then(() => {
-      // debug(`mock createOne result: ${result}`);
-      debug(`mock createOne result.auth: ${result.auth}`);
-      debug(`mock createOne result.token: ${result.token}`);
       return result;
     });
 };
 
-/* GALLERY MOCKS */
-// mock.gallery.createOne = () => {
-//   let resultMock = {};
+// // Profile Mocks
+mocks.profile = {};
 
-//   return mock.auth.createOne()
-//     .then(createdAuthMock => resultMock = createdAuthMock)
-//     .then(createdAuthMock => {
-//       return new Gallery({
-//         name: faker.internet.domainWord(),
-//         description: faker.lorem.words(15),
-//         userId: createdAuthMock.auth._id,
-//       }).save();
-//     })
-//     .then(gallery => {
-//       resultMock.gallery = gallery;
-//       console.log(resultMock);
-//       debug('galleryMock created, about to return');
-//       return resultMock;
-//     });
-// };
+mocks.profile.createOne = () => {
+  let result = {};
 
-/* MOCK REMOVALS */
-mock.auth.removeAll = () => Promise.all([Auth.remove()]);
+  return mocks.auth.createOne()
+    .then(user => result = user)
+    .then(userMock => {
+      return new Profile({
+        gamesPlayed: (faker.random.number()).toString(),
+        gamesWon: (faker.random.number()).toString(),
+        percentWon: (faker.random.number()).toString(),
+        username: userMock.user.username,
+        userId: userMock.user._id,
+      }).save();
+    })
+    .then(profile => {
+      result.profile = profile;
+      return result;
+    });
+};
+
+// Remove
+mocks.auth.removeAll = () => Promise.all([Auth.remove()]);
+mocks.profile.removeAll = () => Promise.all([Note.remove()]);

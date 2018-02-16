@@ -200,22 +200,18 @@ Alternatively, if no `town` affiliated players remain:
 * `alignment` determines the alignemtn that each role belongs to, and the win condition of each player.
 * `action` is a function available to each role, which determines the target of their nightly action and returns a success message to the user when they properly enter the `@action <target>` command.
 
-There are currently 7 roles in the game, and more can be added as desired with proper logic refactoring (over 30 roles in some Mafia variants). These roles are:
-* Cop
-* Creeper
-* Dentist
-* Jailor
-* Locksmith
-* Thief
-* Thief Recruiter
+There are currently 7 roles and 1 sub-role in the game, and more can be added as desired with proper logic refactoring (over 30 roles in some Mafia variants). These roles are:
+### Town
+* **Cop:** Can investigate one player each night. Receives "town" or "thief" result for that player.
+* **Creeper:** Can see who one player targeted each night. If the targeted player performs a night action, the creeper will receive a result of who the action was directed toward. If the targeted player does not perform an action, no result will be received.
+* **Dentist:** Can visit one player at night and perform dental procedures. The targeted player is muted during the next day phase and cannot speak, but can still use actions.
+* **Jailor:** Can prevent one player's night action. If targeted player performs a night action, their action will not take effect.
+* **Locksmith:** Can protect one player each night from being robbed. If targeted player is also targeted by the thief, nothing will happen. 
 
-<INSERT
-
- ROLES 
- 
- IMAGE 
- 
- HERE>
+### Thieves
+* **Junior Thief (Sub-role):** The junior thief is a formerly town-aligned player who has been recruited by the thief recruiter. The junior thief cannot use any night actions, but can talk with fellow thieves during the night phase.
+* **Thief:** Can rob one player each night. Can speak at night to other thieves to coordinate action. If robbery is successful, the player will leave the town (game) at the next day phase.
+* **Thief Recruiter:** Can cause one town-aligned player to become a thief. Ability can only be used once a game. The recruiter cannot be blocked by the jailor. If recruitment is successful, the targeted player will receive notification that s/he has become a thief at the next day phase, and the targeted player's night action for the current night will not take effect.
 
 ## Commands
 ### Game Commands

@@ -19,16 +19,19 @@ module.exports = function (router) {
     // user is returned in the method so that we can save the user. User is now set with hashed password in DB.
       .then(newUser => {
         result = newUser;
+        return newUser.save();
+      })
+      .then(userRes => {
         // creates a profile for the user
         new Profile({
           gamesPlayed: 0,
           gamesWon: 0,
           percentWon: 0,
-          userId: newUser._id,
+          username: userRes.username,
+          userId: userRes._id,
         }).save();
-        return newUser.save();
+        return userRes.generateToken();
       })
-      .then(userRes => userRes.generateToken())
       .then(() => res.status(201).send(result))
       .catch(err => errorHandler(err, res));
   });

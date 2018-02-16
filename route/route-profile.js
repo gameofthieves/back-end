@@ -37,12 +37,12 @@ module.exports = function (router) {
   //   });
 
   router.put('/profile/:_id?', bodyParser, (req, res) => {
-    console.log('in put');
     Profile.findById(req.params._id, req.body)
       .then(profile => {
         if (profile._id.toString() === req.params._id.toString()) {
-          profile.gamesPlayed = Number(req.body.gamesPlayed);
-          profile.gamesWon = Number(req.body.gamesWon);
+          profile.gamesPlayed = req.body.gamesPlayed;
+          profile.gamesWon = req.body.gamesWon;
+          profile.percentWon = req.body.percentWon;
           return profile.save();
         }
         return errorHandler(new Error('Validation error. Invalid ID.'), res);

@@ -23,19 +23,19 @@
 
 ***
 # Overview
-This application is a variant and CLI (command line interface) implementation of a popular social game known as Mafia. There are multiple roles that will be randomly assigned to each user in game. Roles have two possible affiliations; the `town` or `thieves`. As members of the `town`, the goal is to identify and oust the `thieves` from the game through daily voting sessions.
+This application is a variant and CLI (command line interface) implementation of a popular social game known as Mafia. It incorporates `MongoDB` to save user profiles and statistics from games a registered user has played. There are multiple roles that will be randomly assigned to each user in game. Roles have two possible affiliations; the `town` or `thieves`. As members of the `town`, the goal is to identify and oust the `thieves` from the game through daily voting sessions.
 
 The game has two phases, day and night. During the day phase all users may communicate through a TCP server, providing any information they find helpful (or harmful) to the identification of the `thieves`. Before the night phase begins, every user can cast a vote on who they believe are affiliated with the `thieves`. The user with the largest amount of votes will be cast out of town. During the night phase, the `thieves` are able to speak with one another and vote on who they want to rob, driving them out of town. Each role has their own unique action they are able to take during the night phase. 
 
-Upon daybreak, the user that was robbed will be removed from the game, and the result of some additional interactions that _may_ have occurred will be broadcast to the entire group. If there are no town members remaining at the start of either phase, the `thieves` will have won the game, and visa versa.
+Upon daybreak, the user that was robbed will be removed from the game, and the result of some additional interactions that **may** have occurred will be broadcast to the entire group. If there are no town members remaining at the start of either phase, the `thieves` will have won the game, and visa versa.
 
 ***
 # Getting Started
-To get this application up and running on your local machine, fork and/or clone this repository using the `git clone <git repository link>` command in your terminal. Next, run the `npm install` command, which will install all the necessary dependencies in the accompanying package.json file. If wanting to view tests, enter `npm install -D` into the command line. 
+To get this application up and running on your local machine, fork and/or clone this repository using the `git clone <git repository link>` command in your terminal. Next, run the `npm install` command, which will install all the necessary dependencies in the accompanying package.json file. If wanting to view tests, enter `npm install -D` into the command line to ensure dev-dependencies have installed. 
 
 After those packages have installed, you can run `npm test` to explore the included tests to ensure everything is functioning as expected. `npm run test:debug` will allow for the use of the `debug` package if dev-dependencies have been installed. You can open up the cloned repository in your favorite editor to explore/modify the code, see how the tests are structured, and create tests of your own if desired. 
 
-<!-- Downloading and installing `MongoDB` (see links below) and entering the command `npm run start-db` will initiate the database required for complete functionality in storing records of game sessions, and gathering statistics for specific user profiles. -->
+Downloading and installing `MongoDB` (see links below) and entering the command `npm run start-db` will initiate the database required for complete functionality in storing records of game sessions, registering users, and gathering statistics for specific user profiles.
 
 **NOTE**: If you'd rather just visit the deployed site instead of downloading and hosting off your local machine, visit [Game of Thieves](gameofthieves.com) at gameofthieves.com. 
 
@@ -90,22 +90,6 @@ Upon successful connection to the server as a user, the terminal window 'welcome
 \ Type @help to see a list of commands.    /
  ------------------------------------------
 ```
-<!-- You can make a HTTP `POST` request using `HTTPie`, `Postman`, or a comparable tool to create a profile. This request will need to include `username`, `password`, and `email` properties all in the form of strings. With `HTTPie`, your request should look like:
-```
-/* local machine */
-http POST :3000/signup username=myUsername password=myPassword email=emailHandle@email.com
-
-/* deployed */
-http POST <Heroku URL>/signup username=myUsername password=myPassword email=emailHandle@email.com
-```
-If you are using `Postman`, it's a little more complicated. After installing `Postman` you can click on the box in the top left out of 6 options upon opening the application that says `Make a Request`. From there, you can choose from a dropdown that defaults to `GET` and change the request type to `POST`, enter the desired path of `localhost:<PORT>/signup`, change ideally the `Body` tab below the `URL` entry area, click on `raw`, and then enter the above properties as bonafied JSON. Your request body should look like:
-```
-{
-  "username": "<myUsername>",
-  "password": "<myPassword>", 
-  "email": "<myEmail>"
-}
-```-->
 
 ***
 # Game Flow
@@ -464,6 +448,7 @@ The **`route-profile`** module utilizes `bodyParser` and requires in the `profil
 
 ***
 # Data Flow
+![data-flow](./img/data-flow.png)
 
 ***
 # Testing

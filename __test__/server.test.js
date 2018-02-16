@@ -46,9 +46,7 @@ describe('valid requests', () => {
         console.log('connections: ', count);
         expect(count).toBe(1);
       });
-      client.on('data', data => {
-        console.log('data returned on connections test', data);
-        client.end();
+      client.on('data', () => {
       });
     });
   });
@@ -71,10 +69,11 @@ describe('valid requests', () => {
       socket.on('data', data => {
         messages.push(data.toString());
         socket.end(null, () => {
-          expect(messages[0]).toMatch('Welcome to Game of Thieves!');
+          expect(messages[0]).toMatch('Welcome');
           done();
         });
       });
     });
   });
+
 });

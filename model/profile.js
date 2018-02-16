@@ -4,10 +4,10 @@ const mongoose = require('mongoose');
 
 const Profile = mongoose.Schema({
   gamesPlayed: {
-    type: Number,
+    type: String,
   },
   gamesWon: {
-    type: Number,
+    type: String,
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,

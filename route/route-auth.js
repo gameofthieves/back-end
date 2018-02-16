@@ -29,7 +29,6 @@ module.exports = function (router) {
         return newUser.save();
       })
       .then(userRes => userRes.generateToken())
-    // sending token back in body of response
       .then(() => res.status(201).send(result))
       .catch(err => errorHandler(err, res));
   });

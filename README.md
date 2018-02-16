@@ -10,7 +10,6 @@
 * [Route](#route) | [Route Auth](#route-auth) || [Route Profile](#route-profile)
 * [Data Flow](#data-flow)
 * [Testing](#testing)
-* [Workflow](#workflow)
 * [Resources](#resources)
 
 **Authors**

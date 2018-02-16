@@ -34,11 +34,11 @@ Upon daybreak, the user that was robbed will be removed from the game, and the r
 # Getting Started
 To get this application up and running on your local machine, fork and/or clone this repository using the `git clone <git repository link>` command in your terminal. Next, run the `npm install` command, which will install all the necessary dependencies in the accompanying package.json file. If wanting to view tests, enter `npm install -D` into the command line to ensure dev-dependencies have installed. 
 
-After those packages have installed, you can run `npm test` to explore the included tests to ensure everything is functioning as expected. `npm run test:debug` will allow for the use of the `debug` package if dev-dependencies have been installed. You can open up the cloned repository in your favorite editor to explore/modify the code, see how the tests are structured, and create tests of your own if desired. 
+After those packages have installed, you can run `npm test` to explore the included tests to ensure everything is functioning as expected. You can open up the cloned repository in your favorite editor to explore/modify the code, see how the tests are structured, and create tests of your own if desired. 
 
 Downloading and installing `MongoDB` (see links below) and entering the command `npm run start-db` will initiate the database required for complete functionality in storing records of game sessions, registering users, and gathering statistics for specific user profiles.
 
-**NOTE**: If you'd rather just visit the deployed site instead of downloading and hosting off your local machine, visit [Game of Thieves](gameofthieves.com) at gameofthieves.com. 
+**NOTE**: If you'd rather just visit the deployed site and play the game instead of downloading and hosting off your local machine, visit [Game of Thieves](gameofthieves.com) at gameofthieves.com. You can connect to the game via your CLI by connecting to gameofthieves.com port 3000.
 
 If you are cloning and running the application on your local machine, entering `npm start` in your terminal while in the root directory of the application will return a message like this:
 
@@ -77,7 +77,7 @@ telnet <IP ADDRESS OF SERVER PC> <PORT>
 telnet gameofthieves.com <PORT>
 ```
 
-Upon successful connection to the server as a user, the terminal window 'welcome screen' will look just like this:
+Upon successful connection to the server as a user, you will be prompted to register an account or to log in. Once logged in, the terminal window 'welcome screen' will look just like this:
 ```
     ____                               __   _____ _     _                       
    / ___| __ _ _ __ ___   ___    ___  / _| |_   _| |__ (_) _____   _____  ___   
@@ -435,17 +435,17 @@ The `user` module exports a single anonymous function and utilizes `faker` to cr
 The **`basic-auth-middlware`** module exports a single anonymous function expecting three arguments, req, res, and next. It validates that there are authorization headers accompanying HTTP requests, as well as the presence of both username and password information sent along in those headers. On success, it calls next at the end of the function to continue the processing of the request.
 
 ### Commands
-The **`commands`** module serves as a massive command parser/interpreter. It is home to many switch cases and other conditional logic. It checks whether the text it recieves starts with the special command character `@` and if it does, it determines which command has been entered and serves the proper response. It requires in and utilizes `superagent`, `bad-words`, and `chalk` as well as the `server`, `game`, and `roles` modules.
+The **`commands`** module serves as a massive command parser/interpreter. It is home to many switch cases and other conditional logic. It checks whether the text it recieves starts with the special command character `@` and if it does, it determines which command has been entered and serves the proper response. It requires in and utilizes `superagent`, `bad-words`, and `chalk` as well as the `server`, `game`, and `roles` modules. It also handles creating and joining individual chat rooms so that multiple games can be run concurrently on the server. The commands module also makes get and post request to the HTTP server to handle registration and login. 
 
 ### Error Handler
 The **`error-handler`** module exports a single anonymous function expecting `err` and `res` arguments. It forces the error message it receives to lower case, and determines whether the message includes certain expected words or phrases through the use of switch cases, and serves the appropriate status code as well as the error name and message.
 
 ### Game
-JH
-* **`checkWinner(user)`**
-* **`phase()`**
-* **`tallyDayVotes(user)`**
-* **`nightActions(user)`**
+The **`game`** module handles each individual game in play and is initiated by the @join command when the necessary amount of players have joined the room. The game is initiated at `game.start()`, which pulls roles from our `roles` model and randomly assigns them to each player. It sends each user a message stating that hte game has started, along with their role and who they are playing with. 
+
+The game starts at day 0, night phase, so users are immediately able to perform their night actions. Phasing of the days and nights are handled by the `phase()` function, which uses JavaScript `setInterval()`. After each phase, either the `tallyDayVotes()` function or the `nightActions()` function is called to handle player commands and interactions. Then, at the end of each phase after votes or actions have been accounted for, the `checkWinner()` function is called to see if the game has been won. 
+
+The `checkWinner()` function makes a put request to our HTTP server to modify the user's profile (games won and games played), then closes the current room and redirects each player to the `home` room.
 
 ### Server (HTTP)
 The **`http`** module utilizes `cors`, `express`, and `mongoose`. It requires in the `errorHandler`, `route-auth`, and `route-profile` modules. It exports a single `server` object, instantiates an `express` server, specifies endpoints and passes the router instance to the `route` modules. It also attaches `server.start()` and `server.stop()` methods to the server. These methods also connect and disconnect from `mongoose` and the `MongoDB` respectively. 
@@ -455,7 +455,7 @@ The **`server`** module utilizes `cowsay`, `chalk`, `figlet`, `net`, and `supera
 
 ## Route
 ### Route Auth
-The **`route-auth`** utilizes `bodyParser` and requires in the `auth` and `profile` schemas, as well as the `basic-auth-middleware` and `error-handler` modules. It module exports a single anonymous function expecting a `router` argument. The exported file has CRUD methods mounted on the router for the `/register` and `/login` endpoints, `POST`ing and `GET`ing respectively.
+The **`route-auth`** utilizes `bodyParser` and requires in the `auth` and `profile` schemas, as well as the `basic-auth-middleware` and `error-handler` modules. It module exports a single anonymous function expecting a `router` argument. The exported file has CRUD methods mounted on the router for the `/register` and `/login` endpoints, `POST`ing and `GET`ing respectively. When a user registers, a profile is automatically created for them in the `POST` method.
 
 ### Route Profile
 The **`route-profile`** module utilizes `bodyParser` and requires in the `profile` schema and `error-handler` module. It exports a single anonymous function expecting a `router` argument. The exported file has CRUD methods mounted on the router for the `/profile`, `/profile/:userID`, and `/profile/:_id?` endpoints. `PUT` incorporates the `body-parser` middleware for the purposes described above. `GET` incorporates the custom `basicAuth` middleware to validate authorization for retreival of information.

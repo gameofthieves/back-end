@@ -61,8 +61,6 @@ After those packages have installed, you can run `npm test` to explore the inclu
 
 Downloading and installing `MongoDB` (see links below) and entering the command `npm run start-db` will initiate the database required for complete functionality in storing records of game sessions, registering users, and gathering statistics for specific user profiles.
 
-<!-- **NOTE**: If you'd rather just visit the deployed site and play the game instead of downloading and hosting off your local machine, visit [Game of Thieves](gameofthieves.com) at gameofthieves.com. You can connect to the game via your CLI by connecting to gameofthieves.com port 3000. -->
-
 If you are cloning and running the application on your local machine, entering `npm start` in your terminal while in the root directory of the application will return a message like this:
 
 ```
@@ -83,15 +81,21 @@ Listening on <PORT>
 Connections:  1 
 Connections:  2, etc. <logs new connections as they are made>
 ``` 
-**NOTE** For windows users, especially those using a PuTTY Telnet client, navigate to your settings and select a box labelled `Implicit CR in every LF`.
+**NOTE** For windows users, especially those using a PuTTY TelNet client, navigate to your settings and select a box labelled `Implicit CR in every LF`.
 
 Using your command line, you can connect to the server using the following commands:
 ```
 /* NetCat if locally hosting */
 nc <IP ADDRESS OF SERVER PC> <PORT>
 
-/* Telnet if locally hosting */
+/* NetCat if connecting to deployed server */
+nc gameofthieves.com 3000
+
+/* TelNet if locally hosting */
 telnet <IP ADDRESS OF SERVER PC> <PORT>
+
+/* TelNet if connecting to deployed server */
+telnet gameofthieves.com 3000
 ```
 
 Upon successful connection to the server as a user, you will be prompted to register an account or to log in. Once logged in, the terminal window 'welcome screen' will look just like this:

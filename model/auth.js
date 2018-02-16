@@ -26,7 +26,7 @@ Auth.methods.generatePasswordHash = function (password) {
 
 // 2. After someone signs up, compare what they've sent to the hashed password in DB.
 Auth.methods.comparePasswordHash = function (password) {
-  // returns new Promise object in order to get bcrypt.compare to work, with callback
+  // returns new Promise object in order to get compare to work, with callback
   return new Promise((resolve, reject) => {
     // only two arguments passed to valid is true or false
     bcrypt.compare(password, this.password, (err, valid) => {

@@ -1,6 +1,7 @@
 'use strict';
 
 const Auth = require('../model/auth');
+const Profile = require('../model/profile');
 const basicAuth = require('../lib/basic-auth-middleware');
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
@@ -18,6 +19,13 @@ module.exports = function (router) {
     // user is returned in the method so that we can save the user. User is now set with hashed password in DB.
       .then(newUser => {
         result = newUser;
+        // creates a profile for the user
+        new Profile({
+          gamesPlayed: 0,
+          gamesWon: 0,
+          percentWon: 0,
+          userId: newUser._id,
+        }).save();
         return newUser.save();
       })
       .then(userRes => userRes.generateToken())

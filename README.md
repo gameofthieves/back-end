@@ -207,12 +207,8 @@ Alternatively, if no `town` affiliated players remain:
 ```
 
 # Roles
-`roles.js` in the `model/` directory is home to the possible random role assignments to every user in a game session. Each nested object has `name`, `alignment`, and `action` properties.
-* `name` refers to the role name, such as cop, jailor, or thief.
-* `alignment` determines the alignemtn that each role belongs to, and the win condition of each player.
-* `action` is a function available to each role, which determines the target of their nightly action and returns a success message to the user when they properly enter the `@action <target>` command.
-
 There are currently 7 roles and 1 sub-role in the game, and more can be added as desired with proper logic refactoring (over 30 roles in some Mafia variants). These roles are:
+
 ## Town
 * **Cop:** Can investigate one player each night. Receives "town" or "thief" result for that player.
 * **Creeper:** Can see who one player targeted each night. If the targeted player performs a night action, the creeper will receive a result of who the action was directed toward. If the targeted player does not perform an action, no result will be received.
@@ -226,6 +222,7 @@ There are currently 7 roles and 1 sub-role in the game, and more can be added as
 * **Thief Recruiter:** Can cause one town-aligned player to become a thief. Ability can only be used once a game. The recruiter cannot be blocked by the jailor. If recruitment is successful, the targeted player will receive notification that s/he has become a thief at the next day phase, and the targeted player's night action for the current night will not take effect.
 
 # Commands
+The format of the following commands is the command entered by a user, followed by the printed response in their terminal window (represented by code blocks).
 ## General
 **`@about`** Describes the basic game mechanics to users to help those unfamiliar udnerstand the flow of the game.
 ```
@@ -369,49 +366,62 @@ ends when no thieves are left or when no town are left.
 
 **`@rooms`** Lists all active game rooms, in case the creator forgot to mention it to their party.
 ```
-	 Room(#players): home(<number>) <room 1>(<number>) <room 2 if appliccable>(<number>) 
+	Room(#players): home(<number>) <room 1>(<number>) <room 2 if appliccable>(<number>) 
 
 ```
 
 **`@quit`** Removes the user from current game and closes connection to the server.
 ```
-	 See you later, <your username>
+	See you later, <your username>
 ```
 Additionally, when you leave the game all users are broadcast this message:
 ```
-    <quitting username> has quit the game. <quitting username>'s role was <ROLE>.
+  <quitting username> has quit the game. <quitting username>'s role was <ROLE>.
 ```
 
 ## Day Phase Only
-**`@vote <playername>`** Submits a vote for the specified player to be jailed (removed from the game). This command will return this message:
+**`@vote <playername>`** Submits a vote for the specified player to be jailed (removed from the game).
 ```
-	 ##VOTE: <your username>: <target username>.
-	 Use @votes to see current votes for the day.
+  ##VOTE: <your username>: <target username>.
+	Use @votes to see current votes for the day.
 ```
 
 **`@votes`** Shows current vote tallies and players they belong to.
 ```
-	 <targeted username>: <number>
-   <targeted username (if multiple)> : <number> 
+	<targeted username>: <number>
+  <targeted username (if multiple)> : <number> 
 ```
 
 ## Night Phase Only
-**`@action <playername>`** Submits an action to be performed on the specified player. Returns a message to the user upon successful registratio of the action.
+**`@action <playername>`** Submits an action to be performed on the specified player. Returns a message to the user upon successful registration of the action.
 ```
-	 Your night action has been recorded. 
+	Your night action has been recorded. 
 ```
 
-**`@lastwords <journal entry here>`** Saves a journal of whatever follows the `@lastwords` command to be broadcast to other users if they are removed from the game either by the theif or by being voted out. Gives users the ability to record what they did at night, what their role was, and anything important they feel should be shared.
+**`@lastwords <journal entry here>`** Saves a journal of whatever follows the `@lastwords` command to be broadcast to other users if they are removed from the game either by the thief or by being voted out. Gives users the ability to record what they did at night, what their role was, and anything important they feel should be shared.
 ```
-	 Your last words have been recorded. 
+	Your last words have been recorded. 
 ```
 
 ***
 # Components/Modules
 ## Model
 ### Auth
+The `auth` module exports a single `Mongoose` schema. It has `username`, `password` and `compareHash` properties. The first two are required and values are expected to be in the form of strings. There are 4 methods attached to the `Auth` schema:
+* **`generatePasswordHash(password)`** Expects a single password argument, and utilizes `bcrypt` to hash and store a reference to the original password entered by the user. This allows the application to toss the original plain-text password, and store only the hash. If there is no password passed as an argument, the method will return a Promise rejection passing on an `Authorization` error.
+* **`comparePasswordHash(password)`** Expects a single password argument, and utilizes `bcrypt` to compare a stored password hash for an `Auth` schema instance with the password supplied in an HTTP request. If the password hashes match, it will return a Promise resolve and allow the application to proceed. If `bcrypt` does not return `valid` as the result of the comparison, the function will reject a new `Authorization` error.
+* **`generateCompareHash()`** Expects no arguments, and uses `crypto` to generate and save a compareHash to be stored on the `Auth` instance as the value of the property on the schema.
+* **`generateToken()`** Expects no arguments, and uses `jwt` to create and return a token to the user that will accompany future requests in the same session of the application.
+
 ### Profile
+The `profile` module exports a single `Mongoose` schema as well. It has `gamesPlayed`, `gamesWon`, `percentWon`, `username`, and `userId` properties. The first 4 are expected to be strings, and only the last 2 are required.
+
 ### Roles
+The `roles` module exports a single `roles` object, with nested objects that correlate to the possible random role assignments to every user in a game session. Each nested object has `name`, `alignment`, and `action` properties. 
+* **`name`** Refers to the role name, such as cop, jailor, or thief.
+* **`alignment`** Determines the alignment that each role belongs to, and the win condition of each player.
+* **`action`** Function available to each role, which determines the target of their nightly action and returns a success message to the user when they properly enter the `@action <target>` command.
+
 ### User
 
 ## Lib

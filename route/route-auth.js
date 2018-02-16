@@ -1,39 +1,49 @@
 'use strict';
 
 const Auth = require('../model/auth');
+const Profile = require('../model/profile');
+const basicAuth = require('../lib/basic-auth-middleware');
 const bodyParser = require('body-parser').json();
 const errorHandler = require('../lib/error-handler');
-const basicAuth = require('../lib/basic-auth-middleware');
-const debug = require('debug')('http:route-auth');
 
-module.exports = function(router) {
-  router.post('/signup', bodyParser, (req, res) => {
-    debug(`router.post, calling user.generatePasswordHash`);
-    let password = req.body.password;
+module.exports = function (router) {
+  router.post('/register', bodyParser, (req, res) => {
+    let result = {};
+    result.password = req.body.password;
     delete req.body.password;
 
+    // pass remaining request body (username and email) into Auth model and store as temporary instance of model
     let user = new Auth(req.body);
 
-    user.generatePasswordHash(password)
+    return user.generatePasswordHash(result.password)
+    // user is returned in the method so that we can save the user. User is now set with hashed password in DB.
       .then(newUser => {
-        debug('generatePassHash returned value, about to save');
+        result = newUser;
         return newUser.save();
       })
       .then(userRes => {
-        debug('user saved, calling generateToken');
+        // creates a profile for the user
+        new Profile({
+          gamesPlayed: 0,
+          gamesWon: 0,
+          percentWon: 0,
+          username: userRes.username,
+          userId: userRes._id,
+        }).save();
         return userRes.generateToken();
       })
-      .then(token => res.status(201).json(token))
+      .then(() => res.status(201).send(result))
       .catch(err => errorHandler(err, res));
   });
 
-  router.get('/signin', basicAuth, (req, res) => {
-    debug('router.get, calling Auth.findOne');
+  router.get('/login', basicAuth, (req, res) => {
+    let result = {};
     Auth.findOne({ username: req.auth.username })
       .then(user => {
+        result = user;
         return user
           ? user.comparePasswordHash(req.auth.password)
-          : Promise.reject(new Error('Authorization Failed. User not found.'));
+          : Promise.reject(new Error('Authorization failed. User not found.'));
       })
       .then(user => {
         delete req.headers.authorization;
@@ -41,7 +51,7 @@ module.exports = function(router) {
         return user;
       })
       .then(user => user.generateToken())
-      .then(token => res.status(200).json(token))
+      .then(() => res.status(200).send(result))
       .catch(err => errorHandler(err, res));
   });
 };

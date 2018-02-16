@@ -10,7 +10,7 @@ describe('valid requests', () => {
   it(`should listen on 3000`, () => {
     expect(PORT).toEqual('3000');
 
-require('jest');
+    require('jest');
 
   });
 
@@ -79,5 +79,5 @@ require('jest');
       });
     });
   });
-
+  server.stop;
 });

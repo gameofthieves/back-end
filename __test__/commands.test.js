@@ -5,10 +5,10 @@ const net = require('net');
 const server = require('../lib/server');
 const commands = require('../lib/commands');
 
-beforeAll(server.start);
-afterAll(server.stop);
 
 describe('commands', () => {
+  beforeAll(server.start);
+  afterAll(server.stop);
   describe('@me test', () => {
     it('should return the user name and room they are in', () => {
       let socket = net.connect(3000, 'localhost');
@@ -48,13 +48,11 @@ describe('commands', () => {
   describe('@about test', () => {
     it('should contain a sentence from the about string', () => {
       let socket = net.connect({port: 3000});
-      console.log('WTF');
       socket.on('data', data => {
         console.log('data upon connect', data.toString());
       });
       socket.write(`@about`, () => {
         socket.on('data', data => {
-          console.log('HELLO?');
           console.log('DATA @about ', data.toString());
           expect(data.toString()).toMatch('Game of Thieves is a mafia-based CLI multi-player game.');
           socket.end();
@@ -64,7 +62,7 @@ describe('commands', () => {
   });
 
   describe('@help test', () => {
-    it('should contain a sentence from the about string', () => {
+    it('should contain a sentence from the help string', () => {
       let socket = net.connect({port: 3000});
       socket.write(`@help`, () => {
         socket.on('data', data => {

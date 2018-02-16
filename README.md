@@ -6,11 +6,12 @@
 * [Commands](#commands) | [General](#general) || [Day Phase Only](#day-phase-only) || [Night Phase Only](#night-phase-only)
 * [Components/Modules](#components/modules)
 * [Model](#model) | [Auth](#auth) || [Profile](#profile) || [Roles](#roles) || [User](#user)
-* [Lib](#lib) | [Basic Auth Middleware](#basic-auth-middleware) || [Commands](#commands) || [Error Handler Middleware](#error-handler-middleware) || [HTTP](#http) || [Game](#game) || [Server](#server(TCP))
+* [Lib](#lib) | [Basic Auth Middleware](#basic-auth-middleware) || [Commands](#commands) || [Error Handler](#error-handler) || [Game](#game) || [Server (HTTP)](#server-http) || [Server (TCP)](#server-tcp)
 * [Route](#route) | [Route Auth](#route-auth) || [Route Profile](#route-profile)
 * [Data Flow](#data-flow)
 * [Testing](#testing)
 * [Workflow](#workflow)
+* [Resources](#resources)
 
 **Authors**
 * [Ed Abrahamsen](https://github.com/esa2) | github.com/esa2
@@ -251,13 +252,13 @@ ends when no thieves are left or when no town are left.
 
 **`@create <room>`** Creates a game room with a custom name 
 ```
-	you have created the room <room>.
+ you have created the room <room>.
 ```
 
 **`@join <room>`** Joins a custom game room.
 ```
-	<Your Username> has joined the room <room>. 
-	Players: <number>; <number> more players needed.
+ <Your Username> has joined the room <room>. 
+ Players: <number>; <number> more players needed.
 ```
 
 **`@help`** Lists all available commands with descriptions.
@@ -290,21 +291,21 @@ ends when no thieves are left or when no town are left.
 
 **`@me`** Lists your username, name of current room, and your current role.
 ```
-	===== USER ===== 
-	Name: <your username> 
-	Room: <room> 
-	Role: <YOUR ROLE>
+ ===== USER ===== 
+ Name: <your username> 
+ Room: <room> 
+ Role: <YOUR ROLE>
 ```
 
 **`@phase`** Lists current day and phase in game (e.g. Day 3, Night Phase).
 ```
-	Currently on day <number>, <day || night> phase. 
+ Currently on day <number>, <day || night> phase. 
 ```
 
 **`@players`** Lists all active players in the room.
 ```
-	Active users playing in room <room> (7): 
-	<User 1>, <User 2>, <User 3>, <User 4>, <User 5>, <User 6>, <User 7>
+ Active users playing in room <room> (7): 
+ <User 1>, <User 2>, <User 3>, <User 4>, <User 5>, <User 6>, <User 7>
 ```
 
 **`@roles`** Lists all possible roles.
@@ -366,45 +367,46 @@ ends when no thieves are left or when no town are left.
 
 **`@rooms`** Lists all active game rooms, in case the creator forgot to mention it to their party.
 ```
-	Room(#players): home(<number>) <room 1>(<number>) <room 2 if appliccable>(<number>) 
-
+ Room(#players): home(<number>) <room 1>(<number>) <room 2 if appliccable>(<number>) 
 ```
 
 **`@quit`** Removes the user from current game and closes connection to the server.
 ```
-	See you later, <your username>
+ See you later, <your username>
 ```
 Additionally, when you leave the game all users are broadcast this message:
 ```
-  <quitting username> has quit the game. <quitting username>'s role was <ROLE>.
+ <quitting username> has quit the game. <quitting username>'s role was <ROLE>.
 ```
 
 ## Day Phase Only
 **`@vote <playername>`** Submits a vote for the specified player to be jailed (removed from the game).
 ```
-  ##VOTE: <your username>: <target username>.
-	Use @votes to see current votes for the day.
+ ##VOTE: <your username>: <target username>.
+ Use @votes to see current votes for the day.
 ```
 
 **`@votes`** Shows current vote tallies and players they belong to.
 ```
-	<targeted username>: <number>
-  <targeted username (if multiple)> : <number> 
+ <targeted username>: <number>
+ <targeted username (if multiple)> : <number> 
 ```
 
 ## Night Phase Only
 **`@action <playername>`** Submits an action to be performed on the specified player. Returns a message to the user upon successful registration of the action.
 ```
-	Your night action has been recorded. 
+ Your night action has been recorded. 
 ```
 
 **`@lastwords <journal entry here>`** Saves a journal of whatever follows the `@lastwords` command to be broadcast to other users if they are removed from the game either by the thief or by being voted out. Gives users the ability to record what they did at night, what their role was, and anything important they feel should be shared.
 ```
-	Your last words have been recorded. 
+ Your last words have been recorded. 
 ```
 
 ***
 # Components/Modules
+This application utilizes an `index.js` entry point, which starts both the TCP and HTTP servers listening on their specified ports.
+
 ## Model
 ### Auth
 The `auth` module exports a single `Mongoose` schema. It has `username`, `password` and `compareHash` properties. The first two are required and values are expected to be in the form of strings. There are 4 methods attached to the `Auth` schema:
@@ -415,6 +417,11 @@ The `auth` module exports a single `Mongoose` schema. It has `username`, `passwo
 
 ### Profile
 The `profile` module exports a single `Mongoose` schema as well. It has `gamesPlayed`, `gamesWon`, `percentWon`, `username`, and `userId` properties. The first 4 are expected to be strings, and only the last 2 are required.
+* **`gamesPlayed`** Tracks the amount of games the player has participated in.
+* **`gamesWon`** Tracks the amount of games the player has won.
+* **`percentWon`** Calculates the win percentage of the player.
+* **`username`** The players chosen username while registering on with the DB.
+* **`userId`** A `Mongoose` id referenced from the related `auth` schema.
 
 ### Roles
 The `roles` module exports a single `roles` object, with nested objects that correlate to the possible random role assignments to every user in a game session. Each nested object has `name`, `alignment`, and `action` properties. 
@@ -423,18 +430,37 @@ The `roles` module exports a single `roles` object, with nested objects that cor
 * **`action`** Function available to each role, which determines the target of their nightly action and returns a success message to the user when they properly enter the `@action <target>` command.
 
 ### User
+The `user` module exports a single anonymous function and utilizes `faker` to create random nicknames for users while connected to the TCP server. It is used for current sessions to store individual socket connections for use in other modules and track the server a user is currently logged into.
 
 ## Lib
 ### Basic Auth Middleware
+The **`basic-auth-middlware`** module exports a single anonymous function expecting three arguments, req, res, and next. It validates that there are authorization headers accompanying HTTP requests, as well as the presence of both username and password information sent along in those headers. On success, it calls next at the end of the function to continue the processing of the request.
+
 ### Commands
-### Error Handler Middleware ??
-### HTTP
+The **`commands`** module serves as a massive command parser/interpreter. It is home to many switch cases and other conditional logic. It checks whether the text it recieves starts with the special command character `@` and if it does, it determines which command has been entered and serves the proper response. It requires in and utilizes `superagent`, `bad-words`, and `chalk` as well as the `server`, `game`, and `roles` modules.
+
+### Error Handler
+The **`error-handler`** module exports a single anonymous function expecting `err` and `res` arguments. It forces the error message it receives to lower case, and determines whether the message includes certain expected words or phrases through the use of switch cases, and serves the appropriate status code as well as the error name and message.
+
 ### Game
+JH
+* **`checkWinner(user)`**
+* **`phase()`**
+* **`tallyDayVotes(user)`**
+* **`nightActions(user)`**
+
+### Server (HTTP)
+The **`http`** module utilizes `cors`, `express`, and `mongoose`. It requires in the `errorHandler`, `route-auth`, and `route-profile` modules. It exports a single `server` object, instantiates an `express` server, specifies endpoints and passes the router instance to the `route` modules. It also attaches `server.start()` and `server.stop()` methods to the server. These methods also connect and disconnect from `mongoose` and the `MongoDB` respectively. 
+
 ### Server (TCP)
+The **`server`** module utilizes `cowsay`, `chalk`, `figlet`, `net`, and `superagent`. It also requires in the `user` and `commands` modules. It exports a `net` server, with multiple event listeners that manages and supports multiple active chatrooms, the entry and exit from those chatrooms, as well as defines `server.start()` and `server.stop()` methods.
 
 ## Route
 ### Route Auth
+The **`route-auth`** utilizes `bodyParser` and requires in the `auth` and `profile` schemas, as well as the `basic-auth-middleware` and `error-handler` modules. It module exports a single anonymous function expecting a `router` argument. The exported file has CRUD methods mounted on the router for the `/register` and `/login` endpoints, `POST`ing and `GET`ing respectively.
+
 ### Route Profile
+The **`route-profile`** module utilizes `bodyParser` and requires in the `profile` schema and `error-handler` module. It exports a single anonymous function expecting a `router` argument. The exported file has CRUD methods mounted on the router for the `/profile`, `/profile/:userID`, and `/profile/:_id?` endpoints. `PUT` incorporates the `body-parser` middleware for the purposes described above. `GET` incorporates the custom `basicAuth` middleware to validate authorization for retreival of information.
 
 ***
 # Data Flow
@@ -443,17 +469,20 @@ The `roles` module exports a single `roles` object, with nested objects that cor
 # Testing
 
 ***
-# Workflow
+# Resources
+* [Bad Words](https://www.npmjs.com/package/bad-words) ~ npmjs.com/package/bad-words
+* [BCrypt](https://www.npmjs.com/package/bcrypt) ~ npmjs.com/package/bcrypt
+* [Body Parser](https://www.npmjs.com/package/body-parser) ~ npmjs.com/package/body-parser
+* [Chalk](https://www.npmjs.com/package/chalk) ~ npmjs.com/package/chalk
+* [Cors](https://www.npmjs.com/package/cors) ~ npmjs.com/package/cors
+* [Crypto](https://nodejs.org/api/crypto.html) ~ nodejs.org/api/crypto.html
+* [Dotenv](https://www.npmjs.com/package/dotenv) ~ npmjs.com/package/dotenv
+* [ESLint](https://www.npmjs.com/package/eslint) ~ npmjs.com/package/eslint
+* [Jest](https://facebook.github.io/jest/) ~ facebook.github.io/jest/
+* [JSON Web Token](https://www.npmjs.com/package/jsonwebtoken) ~ npmjs.com/package/jsonwebtoken
+* [MongoDB](https://docs.mongodb.com/) ~ docs.mongodb.com
+* [Mongoose](http://mongoosejs.com/docs/guide.html) ~ mongoosejs.com/docs/guide.html
+* [Net](https://nodejs.org/api/net.html) ~ nodejs.org/api/net.html
+* [Superagent](http://visionmedia.github.io/superagent/) ~ visionmedia.github.io/superagent
 
-***
-# Credits
-* [BCrypt](https://www.npmjs.com/package/bcrypt) ~ https://www.npmjs.com/package/bcrypt
-* [Body Parser](https://www.npmjs.com/package/body-parser) ~ https://www.npmjs.com/package/body-parser
-* [Crypto](https://nodejs.org/api/crypto.html) ~ https://nodejs.org/api/crypto.html
-* [Dotenv](https://www.npmjs.com/package/dotenv) ~ https://www.npmjs.com/package/dotenv
-* [ESLint](https://www.npmjs.com/package/eslint) ~ https://www.npmjs.com/package/eslint
-* [Jest](https://facebook.github.io/jest/) ~ https://facebook.github.io/jest/
-* [JSON Web Token](https://www.npmjs.com/package/jsonwebtoken) ~ https://www.npmjs.com/package/jsonwebtoken
-* [MongoDB](https://docs.mongodb.com/) ~ https://docs.mongodb.com/
-* [Mongoose](http://mongoosejs.com/docs/guide.html) ~ http://mongoosejs.com/docs/guide.html
-* [Net](https://nodejs.org/api/net.html) ~ https://nodejs.org/api/net.html
+**[Top](#game-of-thieves)**

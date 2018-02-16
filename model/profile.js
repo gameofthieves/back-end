@@ -3,13 +3,19 @@
 const mongoose = require('mongoose');
 
 const Profile = mongoose.Schema({
-  name: {
+  gamesPlayed: {
     type: String,
-    required: true,
   },
-  description: {
+  gamesWon: {
+    type: String,
+  },
+  percentWon: {
+    type: String,
+  },
+  username: {
     type: String,
     required: true,
+    unique: true,
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,

@@ -3,11 +3,15 @@
 const net = require('net');
 const server = require('../lib/server');
 const PORT = process.env.PORT;
+
 beforeAll(server.start);
 afterAll(server.stop);
 describe('valid requests', () => {
   it(`should listen on 3000`, () => {
     expect(PORT).toEqual('3000');
+
+require('jest');
+
   });
 
   it('should connect and notify me that I joined the channel', done => {

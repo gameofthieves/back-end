@@ -19,7 +19,6 @@ branches:
   - master
   - staging
   - development
-  - dev/mitchell-wed
 
   # except:
   # - 

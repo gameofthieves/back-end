@@ -3,6 +3,7 @@
 const net = require('net');
 const server = require('../lib/server');
 const PORT = process.env.PORT;
+require('jest');
 
 describe('testing socket write', () => {
   it('should return a socket name', done => {

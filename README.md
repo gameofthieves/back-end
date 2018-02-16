@@ -9,7 +9,7 @@
 
 ***
 # Overview
-This application is an variant and CLI (command line interface) implementation of a popular social game known as Mafia. There are multiple roles that will be randomly assigned to each user in a particular session. Those roles have two possible affiliations: the `town` and the `thieves`. As one may be able to guess, there are different win conditions for these two affiliations. As members of the `town`, the goal is to identify and oust the `thieves` from the game through daily voting sessions.
+This application is a variant and CLI (command line interface) implementation of a popular social game known as Mafia. There are multiple roles that will be randomly assigned to each user in game. Roles have two possible affiliations; the `town` or `thieves`. As members of the `town`, the goal is to identify and oust the `thieves` from the game through daily voting sessions.
 
 The game has two phases, day and night. During the day phase all users may communicate through a TCP server, providing any information they find helpful (or harmful) to the identification of the `thieves`. Before the night phase begins, every user can cast a vote on who they believe are affiliated with the `thieves`. The user with the largest amount of votes will be cast out of town. During the night phase, the `thieves` are able to speak with one another and vote on who they want to rob, driving them out of town. Each role has their own unique action they are able to take during the night phase. 
 
@@ -62,7 +62,7 @@ telnet <IP ADDRESS OF SERVER PC> <PORT>
 telnet gameofthieves.com <PORT>
 ```
 
-Upon succuessful connection to the server as a user, the terminal window welcoming screen will look just like this:
+Upon successful connection to the server as a user, the terminal window 'welcome screen' will look just like this:
 ```
     ____                               __   _____ _     _                       
    / ___| __ _ _ __ ___   ___    ___  / _| |_   _| |__ (_) _____   _____  ___   
@@ -155,7 +155,7 @@ Upon entering the night phase after the first day phase, if votes were tied or n
 \ <User 1>, <User 2>, <User 3>, <User 4>, <User 5>, <User 6> /
  ------------------------------------------------------------
 ```
-Alternatively, is a user was selected by vote:
+Alternatively, if a user was selected by vote:
 ```
  __________________________________________________
 / NEW PHASE: day <number>, night phase             \
@@ -167,15 +167,7 @@ Alternatively, is a user was selected by vote:
 \ <User 1>, <User 2>, <User 3>, <User 5>, <User 6> /
  --------------------------------------------------
 ```
-<INSERT 
-
-DAY/NIGHT 
-
-PHASE 
-
-IMAGE 
-
-HERE>
+![day-night](./img/day-night.png)
 
 Once all players with the `thieves` affiliation have been removed from the game, the channel will be broadcast a 'game-over' message:
 ```
@@ -256,17 +248,13 @@ There are currently 7 roles in the game, and more can be added as desired with p
 
 **`@create <room>`** Creates a game room with a custom name 
 ```
-@create <room>
-
 	 you have created the room <room>.
 ```
 
 **`@join <room>`** Joins a custom game room.
 ```
-@join <room>
-
-	 <Your Username> has joined the room red. 
-	 Players: 2; 5 more players needed.
+	 <Your Username> has joined the room <room>. 
+	 Players: <number>; <number> more players needed.
 ```
 
 **`@help`** Lists all available commands with descriptions.
@@ -299,8 +287,6 @@ There are currently 7 roles in the game, and more can be added as desired with p
 
 **`@me`** Lists your username, name of current room, and your current role.
 ```
-@me
-
 	 ===== USER ===== 
 	 Name: <your username> 
 	 Room: <room> 
@@ -309,23 +295,17 @@ There are currently 7 roles in the game, and more can be added as desired with p
 
 **`@phase`** Lists current day and phase in game (e.g. Day 3, Night Phase).
 ```
-@phase
-
 	Currently on day <number>, <day || night> phase. 
 ```
 
 **`@players`** Lists all active players in the room.
 ```
-@players
-
 	 Active users playing in room <room> (7): 
 	<User 1>, <User 2>, <User 3>, <User 4>, <User 5>, <User 6>, <User 7>
 ```
 
 **`@roles`** Lists all possible roles.
 ```
-@roles
-
     ____                        ____       _            
    / ___| __ _ _ __ ___   ___  |  _ \ ___ | | ___  ___  
   | |  _ / _' | '_ ' _ \ / _ \ | |_) / _ \| |/ _ \/ __| 
@@ -383,19 +363,15 @@ There are currently 7 roles in the game, and more can be added as desired with p
 
 **`@rooms`** Lists all active game rooms, in case the creator forgot to mention it to their party.
 ```
-@rooms
-
 	 Room(#players): home(<number>) <room 1>(<number>) <room 2 if appliccable>(<number>) 
 
 ```
 
 **`@quit`** Removes the user from current game and closes connection to the server.
 ```
-@quit
-
 	 See you later, <your username>
 ```
-Additionally, when you leave the game all users are broadcast a message like this:
+Additionally, when you leave the game all users are broadcast this message:
 ```
     <quitting username> has quit the game. <quitting username>'s role was <ROLE>.
 ```
@@ -403,16 +379,12 @@ Additionally, when you leave the game all users are broadcast a message like thi
 ### Day Phase Only
 **`@vote <playername>`** Submits a vote for the specified player to be jailed (removed from the game). This command will return this message:
 ```
-@vote <target username>
-
 	 ##VOTE: <your username>: <target username>.
 	 Use @votes to see current votes for the day.
 ```
 
 **`@votes`** Shows current vote tallies and players they belong to.
 ```
-@votes
-
 	 <targeted username>: <number>
    <targeted username (if multiple)> : <number> 
 ```
@@ -420,15 +392,11 @@ Additionally, when you leave the game all users are broadcast a message like thi
 ### Night Phase Only
 **`@action <playername>`** Submits an action to be performed on the specified player. Returns a message to the user upon successful registratio of the action.
 ```
-@action <target username>
-
 	 Your night action has been recorded. 
 ```
 
 **`@lastwords <journal entry here>`** Saves a journal of whatever follows the `@lastwords` command to be broadcast to other users if they are removed from the game either by the theif or by being voted out. Gives users the ability to record what they did at night, what their role was, and anything important they feel should be shared.
 ```
-@lastwords <all your entries>
-
 	 Your last words have been recorded. 
 ```
 

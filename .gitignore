@@ -3,6 +3,7 @@ db
 **.env
 temp
 build
+.eslintrc.json
 
 data/note
 

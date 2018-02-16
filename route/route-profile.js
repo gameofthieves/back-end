@@ -10,7 +10,7 @@ module.exports = function (router) {
   router.get('/profile/:userId', (req, res) => {
     let result = {};
     if (req.params.userId) {
-      Profile.findOne({ userId: req.params.userId })
+      return Profile.findOne({ userId: req.params.userId })
         .then(profile => {
           result = profile;
         })
@@ -19,22 +19,15 @@ module.exports = function (router) {
     }
   });
 
-  //   router.get('/profile/:_id?', (req, res) => {
-  //     // returns one profile
-  //     if (req.params._id) {
-  //       return Profile.findById(req.params._id)
-  //         .then(profile => res.status(200).json(profile))
-  //         .catch(err => errorHandler(err, res));
-  //     }
-
-  //     // returns all profiles
-  //     return Profile.find()
-  //       .then(profiles => {
-  //         let profileIds = profiles.map(profile => profile._id);
-  //         return res.status(200).json(profileIds);
-  //       })
-  //       .catch(err => errorHandler(err, res));
-  //   });
+  router.get('/profile', (req, res) => {
+    let result = [];
+    return Profile.find()
+      .then(profiles => {
+        profiles.forEach(profile => result.push([profile.percentWon, profile]));
+        return res.status(200).send(result);
+      })
+      .catch(err => errorHandler(err, res));
+  });
 
   router.put('/profile/:_id?', bodyParser, (req, res) => {
     Profile.findById(req.params._id, req.body)

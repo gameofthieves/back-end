@@ -1,5 +1,5 @@
-language: node.js
-node.js:
+language: node_js
+node_js:
   - 'stable'
 services:
   - mongodb
@@ -10,7 +10,7 @@ addons:
     packages:
       - gcc-5
       - g++-5
-env
+env:
   - CXX=g++-5
 sudo: required
 # safelist
@@ -25,4 +25,4 @@ branches:
 before_script: npm i
 script:
   - npm run test
-  - npm run lint
+  # - npm run lint

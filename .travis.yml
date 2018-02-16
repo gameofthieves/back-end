@@ -1,4 +1,4 @@
-language: node.js
+language: node_js
 node_js:
   - 'stable'
 services:
@@ -19,10 +19,11 @@ branches:
   - master
   - staging
   - development
+  - dev/mitchell-wed
 
   # except:
   # - 
 before_script: npm i
 script:
   - npm run test
-  - npm run lint
+  # - npm run lint

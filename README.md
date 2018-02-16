@@ -5,7 +5,7 @@
   | |_| | (_| | | | | | |  __/ | (_) |  _|   | | | | | | |  __/\ V /  __/\__ \  
    \____|\__,_|_| |_| |_|\___|  \___/|_|     |_| |_| |_|_|\___| \_/ \___||___/
 ```
-
+# Contents
 * [Overview](#overview)
 * [Getting Started](#getting-started)
 * [Game Flow](#game-flow)
@@ -502,4 +502,4 @@ The **`route-profile`** module utilizes `bodyParser` and requires in the `profil
 * [Net](https://nodejs.org/api/net.html) ~ nodejs.org/api/net.html
 * [Superagent](http://visionmedia.github.io/superagent/) ~ visionmedia.github.io/superagent
 
-**[Top](#game-of-thieves)**
+**[Top](#contents)**

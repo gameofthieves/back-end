@@ -1,4 +1,17 @@
 # Game of Thieves
+* [Overview](#overview)
+* [Getting Started](#getting-started)
+* [Game Flow](#game-flow)
+* [Roles](#roles) | [Town](#town) || [Thieves](#thieves)
+* [Commands](#commands) | [General](#general) || [Day Phase Only](#day-phase-only) || [Night Phase Only](#night-phase-only)
+* [Components/Modules](#components/modules)
+* [Model](#model) | [Auth](#auth) || [Profile](#profile) || [Roles](#roles) || [User](#user)
+* [Lib](#lib) | [Basic Auth Middleware](#basic-auth-middleware) || [Commands](#commands) || [Error Handler Middleware](#error-handler-middleware) || [HTTP](#http) || [Game](#game) || [Server](#server(TCP))
+* [Route](#route) | [Route Auth](#route-auth) || [Route Profile](#route-profile)
+* [Data Flow](#data-flow)
+* [Testing](#testing)
+* [Workflow](#workflow)
+
 **Authors**
 * [Ed Abrahamsen](https://github.com/esa2) | github.com/esa2
 * [Joel Clair](https://github.com/ClairJ) | github.com/ClairJ
@@ -94,8 +107,7 @@ If you are using `Postman`, it's a little more complicated. After installing `Po
 ```-->
 
 ***
-# Description
-## Game Flow
+# Game Flow
 ![high-level](./img/high-level.png)
 
 Upon successful creation and filling of a game room with 7 users, all users will be broadcast a 'game start' message that tells the user their role, their alignment based off that role, the current day and phase, as well as
@@ -194,27 +206,27 @@ Alternatively, if no `town` affiliated players remain:
  -----------------------------------------------------------------
 ```
 
-## Roles
+# Roles
 `roles.js` in the `model/` directory is home to the possible random role assignments to every user in a game session. Each nested object has `name`, `alignment`, and `action` properties.
 * `name` refers to the role name, such as cop, jailor, or thief.
 * `alignment` determines the alignemtn that each role belongs to, and the win condition of each player.
 * `action` is a function available to each role, which determines the target of their nightly action and returns a success message to the user when they properly enter the `@action <target>` command.
 
 There are currently 7 roles and 1 sub-role in the game, and more can be added as desired with proper logic refactoring (over 30 roles in some Mafia variants). These roles are:
-### Town
+## Town
 * **Cop:** Can investigate one player each night. Receives "town" or "thief" result for that player.
 * **Creeper:** Can see who one player targeted each night. If the targeted player performs a night action, the creeper will receive a result of who the action was directed toward. If the targeted player does not perform an action, no result will be received.
 * **Dentist:** Can visit one player at night and perform dental procedures. The targeted player is muted during the next day phase and cannot speak, but can still use actions.
 * **Jailor:** Can prevent one player's night action. If targeted player performs a night action, their action will not take effect.
 * **Locksmith:** Can protect one player each night from being robbed. If targeted player is also targeted by the thief, nothing will happen. 
 
-### Thieves
+## Thieves
 * **Junior Thief (Sub-role):** The junior thief is a formerly town-aligned player who has been recruited by the thief recruiter. The junior thief cannot use any night actions, but can talk with fellow thieves during the night phase.
 * **Thief:** Can rob one player each night. Can speak at night to other thieves to coordinate action. If robbery is successful, the player will leave the town (game) at the next day phase.
 * **Thief Recruiter:** Can cause one town-aligned player to become a thief. Ability can only be used once a game. The recruiter cannot be blocked by the jailor. If recruitment is successful, the targeted player will receive notification that s/he has become a thief at the next day phase, and the targeted player's night action for the current night will not take effect.
 
-## Commands
-### Game Commands
+# Commands
+## General
 **`@about`** Describes the basic game mechanics to users to help those unfamiliar udnerstand the flow of the game.
 ```
       _    _                 _      ____     _____   
@@ -372,7 +384,7 @@ Additionally, when you leave the game all users are broadcast this message:
     <quitting username> has quit the game. <quitting username>'s role was <ROLE>.
 ```
 
-### Day Phase Only
+## Day Phase Only
 **`@vote <playername>`** Submits a vote for the specified player to be jailed (removed from the game). This command will return this message:
 ```
 	 ##VOTE: <your username>: <target username>.
@@ -385,7 +397,7 @@ Additionally, when you leave the game all users are broadcast this message:
    <targeted username (if multiple)> : <number> 
 ```
 
-### Night Phase Only
+## Night Phase Only
 **`@action <playername>`** Submits an action to be performed on the specified player. Returns a message to the user upon successful registratio of the action.
 ```
 	 Your night action has been recorded. 

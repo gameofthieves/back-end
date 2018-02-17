@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "node index.js --color=true",
     "digitalocean": "nohup nodejs index.js --color=true &",
     "start:watch": "nodemon index.js",
     "start:debug": "DEBUG=http* nodemon index.js",
